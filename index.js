@@ -9,7 +9,7 @@ initDatabase();
 //Middlewares
 app.use(express.json());
 
-app.use('/', require('./routers/index.js'));
+app.use('/api/v1/', require('./routers/index.js'));
 
 const PORT = process.env.PORT || 3005;
 app.listen(PORT, () => {
