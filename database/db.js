@@ -1,5 +1,5 @@
 const { connect, sync } = require('./Connection');
-// const { User } = require('../model/User');
+const { User } = require('../model/User');
 
 // Asociaciones de la tabla 'User' basadas en el diagrama de clases
 // User.hasMany(Review, {
