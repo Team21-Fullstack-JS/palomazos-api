@@ -2,10 +2,16 @@ const router = require('express').Router();
 
 // Path inicial http://my-app.com/
 router.get('/', (req, res) => {
-    res.send('Bienvenido a la API de Palomazos! sobre peliculas');
+    res
+        .status(200)
+        .json({
+            error: false,
+            code: 200,
+            message: 'Bienvenido a su API de peliculas: Palomazos!'
+        });
 });
 
 // Path http://my-app.com/usuario
-router.use('/usuario', require('./usuario.js'));
+router.use('/users', require('./user.js'));
 
 module.exports = router;
