@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
         });
 });
 
-// Path http://my-app.com/usuario
+// Path http://my-app.com/users
 router.use('/users', require('./user.js'));
 
 module.exports = router;
