@@ -13,5 +13,6 @@ router.get('/', (req, res) => {
 
 // Path http://my-app.com/users
 router.use('/users', require('./user.js'));
+router.use('/movies', require('./movie.js'));
 
 module.exports = router;
