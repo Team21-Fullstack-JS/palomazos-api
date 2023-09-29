@@ -53,7 +53,7 @@ exports.userNotFoundException = async function (req, res, next) {
 }
 
 exports.emailUserNotFoundException = async function (req, res, next) {
-    const user = await getByEmail(req.params.email);
+    const user = await getByEmail(req.query.email);
 
     if (!user) {
         return res

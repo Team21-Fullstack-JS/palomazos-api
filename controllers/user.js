@@ -52,7 +52,10 @@ exports.getById = async function (req, res) {
 }
 
 exports.getByEmail = async function (req, res) {
-    const user = await getByEmail(req.params.email);
+    const { email } = req.query;
+    console.log("EMAIL: ", email);
+
+    const user = await getByEmail(email);
 
     return res
         .status(200)
@@ -104,7 +107,7 @@ exports.deleteLogicById = async function (req, res) {
             .json({
                 error: true,
                 code: 400,
-                message: 'No se pudo actualizar el usuario.',
+                message: 'No se pudo eliminar el usuario.',
                 data: null
             });
     }

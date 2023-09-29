@@ -14,7 +14,10 @@ const validator = require('../middlewares/validator.js');
 
 // Importamos los esquemas de validación
 const {
-    createUserSchema
+    createUserSchema,
+    updateUserSchema,
+    idUserSchema,
+    emailUserSchema
 } = require('../validations/user.js');
 
 // Importamos los diferentes manejadores de errores para los usuarios
@@ -26,8 +29,35 @@ const {
 } = require('../middlewares/exceptions/user-exceptions.js');
 
 /** Path inicial http://my-app.com/users
- * Aqui definimos las rutas para el recurso users
+ * Aqui definimos las rutas para el recurso /users
  */
+router.get(
+    '/',
+    usersNotFoundException,
+    getAll
+);
+
+router.get(
+    '/findby',
+    validator.query(emailUserSchema),
+    emailUserNotFoundException,
+    getByEmail
+);
+
+router.get(
+    '/:id',
+    validator.params(idUserSchema),
+    userNotFoundException,
+    getById
+);
+
+router.delete(
+    '/:id',
+    validator.params(idUserSchema),
+    userNotFoundException,
+    deleteLogicById
+);
+
 router.post(
     '/',
     validator.body(createUserSchema),
@@ -35,10 +65,12 @@ router.post(
     signup
 );
 
-router.get('/', usersNotFoundException, getAll);
-router.get('/:id', userNotFoundException, getById);
-router.get('/email/:email', emailUserNotFoundException, getByEmail);
-router.put('/:id', userNotFoundException, update);
-router.delete('/:id', userNotFoundException, deleteLogicById);
+router.put(
+    '/:id',
+    validator.params(idUserSchema),
+    validator.body(updateUserSchema),
+    userNotFoundException,
+    update
+);
 
 module.exports = router;
