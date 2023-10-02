@@ -1,4 +1,6 @@
 const { User } = require('../model/User');
+
+// Los servicios que estan encargados de interactuar con la base de datos
 const {
     signup,
     getAll,
@@ -8,21 +10,7 @@ const {
     deleteLogicById
 } = require('../service/user');
 
-exports.signup = async function (req, res) {
-
-    const { email } = req.body;
-    const userExist = await getByEmail(email);
-
-    if (userExist) {
-        return res
-            .status(400)
-            .json({
-                error: true,
-                code: 400,
-                message: 'El email ya se encuentra registrado.',
-                data: null
-            });
-    }
+exports.signup = async function (req, res, next) {
 
     const user = User.build(req.body);
     const userDb = await signup(user.dataValues);
@@ -40,17 +28,6 @@ exports.signup = async function (req, res) {
 exports.getAll = async function (req, res) {
     const users = await getAll();
 
-    if (users.length <= 0) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'No existen usuarios en la Base de datos.',
-                data: null
-            });
-    }
-
     return res
         .status(200)
         .json({
@@ -64,17 +41,6 @@ exports.getAll = async function (req, res) {
 exports.getById = async function (req, res) {
     const user = await getById(req.params.id);
 
-    if (!user) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'Usuario no encontrado.',
-                data: null
-            });
-    }
-
     return res
         .status(200)
         .json({
@@ -86,18 +52,10 @@ exports.getById = async function (req, res) {
 }
 
 exports.getByEmail = async function (req, res) {
-    const user = await getByEmail(req.params.email);
+    const { email } = req.query;
+    console.log("EMAIL: ", email);
 
-    if (!user) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'Usuario no encontrado.',
-                data: null
-            });
-    }
+    const user = await getByEmail(email);
 
     return res
         .status(200)
@@ -112,18 +70,6 @@ exports.getByEmail = async function (req, res) {
 exports.update = async function (req, res) {
     const { id } = req.params;
     const content = req.body;
-    const user = await getById(id);
-
-    if (!user) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'Usuario no encontrado.',
-                data: null
-            });
-    }
 
     const isUpdated = await update(id, { ...content });
 
@@ -152,18 +98,6 @@ exports.update = async function (req, res) {
 
 exports.deleteLogicById = async function (req, res) {
     const { id } = req.params;
-    const use = await getById(id);
-
-    if (!use) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'Usuario no encontrado.',
-                data: null
-            });
-    }
 
     const isDeleted = await deleteLogicById(id);
 
@@ -173,7 +107,7 @@ exports.deleteLogicById = async function (req, res) {
             .json({
                 error: true,
                 code: 400,
-                message: 'No se pudo actualizar el usuario.',
+                message: 'No se pudo eliminar el usuario.',
                 data: null
             });
     }
