@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const {
     signup,
+    login,
     getAll,
     getById,
     getByEmail,
@@ -17,7 +18,8 @@ const {
     createUserSchema,
     updateUserSchema,
     idUserSchema,
-    emailUserSchema
+    emailUserSchema,
+    signinUserSchema
 } = require('../validations/user.js');
 
 // Importamos los diferentes manejadores de errores para los usuarios
@@ -59,10 +61,16 @@ router.delete(
 );
 
 router.post(
-    '/',
+    '/signup',
     validator.body(createUserSchema),
     userAlreadyExistsException,
     signup
+);
+
+router.post(
+    '/login',
+    validator.body(signinUserSchema),
+    login
 );
 
 router.put(

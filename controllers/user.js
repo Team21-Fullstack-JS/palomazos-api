@@ -10,9 +10,12 @@ const {
     deleteLogicById
 } = require('../service/user');
 
-exports.signup = async function (req, res, next) {
+exports.signup = async function (req, res) {
 
-    const user = User.build(req.body);
+    const { firstName, lastName, email, password, role } = req.body;
+    const user = User.build({ firstName, lastName, email, role });
+
+    user.createPassword(password);
     const userDb = await signup(user.dataValues);
 
     return res
@@ -21,8 +24,47 @@ exports.signup = async function (req, res, next) {
             error: false,
             code: 201,
             message: 'Usuario creado exitosamente',
-            data: userDb
+            data: userDb.publicData()
         });
+}
+
+exports.login = async function (req, res) {
+       const { email, password } = req.body;
+
+        const userDB = await getByEmail(email);
+
+        if (!userDB) {
+            return res
+                .status(404)
+                .json({
+                    error: true,
+                    code: 404,
+                    message: 'Verificar su Email! o Password.',
+                    data: null
+                });
+        }
+
+        const isPasswordCorrect = userDB.validatePassword(password);
+
+        if (!isPasswordCorrect) {
+            return res
+                .status(404)
+                .json({
+                    error: true,
+                    code: 404,
+                    message: 'Verificar su Email o Password!.',
+                    data: null
+                });
+        }
+
+        return res
+            .status(200)
+            .json({
+                error: false,
+                code: 200,
+                message: 'Usuario logueado exitosamente.',
+                data: userDB.toAuthJSON()
+            });
 }
 
 exports.getAll = async function (req, res) {
@@ -47,13 +89,12 @@ exports.getById = async function (req, res) {
             error: false,
             code: 200,
             message: 'Usuario obtenido exitosamente.',
-            data: user
+            data: user.publicData()
         });
 }
 
 exports.getByEmail = async function (req, res) {
     const { email } = req.query;
-    console.log("EMAIL: ", email);
 
     const user = await getByEmail(email);
 
@@ -62,8 +103,8 @@ exports.getByEmail = async function (req, res) {
         .json({
             error: false,
             code: 200,
-            message: 'Usuario obtenido exitosamente.',
-            data: user
+            message: 'Usuario obtenido exitosamente por su email.',
+            data: user.publicData()
         });
 }
 
@@ -92,7 +133,7 @@ exports.update = async function (req, res) {
             error: false,
             code: 200,
             message: 'Usuario actualizado exitosamente.',
-            data: userBd
+            data: userBd.publicData()
         });
 }
 

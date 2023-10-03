@@ -4,8 +4,9 @@ exports.signup = function (user) {
     return User.create(user);
 }
 
-exports.getAll = function () {
-    return User.findAll();
+exports.getAll = async function () {
+    const users = await User.findAll();
+    return users.map( (user) => user.dataValues.isActive && user.publicData())
 }
 
 exports.getById = function (id) {
