@@ -11,7 +11,7 @@ exports.userAlreadyExistsException = async function (req, res, next) {
                 error: true,
                 code: 400,
                 message: 'Ya existe un usuario registrado con ese email.',
-                data: null
+                data: null,
             });
     }
 
@@ -20,8 +20,9 @@ exports.userAlreadyExistsException = async function (req, res, next) {
 
 exports.usersNotFoundException = async function (req, res, next) {
     const users = await getAll();
+    console.log(users);
 
-    if (users.length <= 0) {
+    if (!users[0] || users.length <= 0) {
         return res
             .status(404)
             .json({
