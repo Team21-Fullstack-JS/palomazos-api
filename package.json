@@ -17,5 +17,8 @@
     "joi": "^17.10.2",
     "mysql2": "^3.6.1",
     "sequelize": "^6.33.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }

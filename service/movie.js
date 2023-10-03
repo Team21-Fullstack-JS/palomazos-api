@@ -31,8 +31,24 @@ exports.getByYear = function(year) {
         }
     })
 
-}
+};
 
 exports.create = function (movie) {
     return Movie.create(movie);
-}
+};
+
+exports.update = function (id, movie) {
+    return Movie.update(movie, {
+        where: {
+            id:id
+        }
+    });
+};
+
+exports.deletelogicById = function (id) {
+    return Movie.update({ isActive: false}, {
+        where: {
+            id:id
+        }
+    });
+};
