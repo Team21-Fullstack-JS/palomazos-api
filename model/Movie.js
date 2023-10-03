@@ -26,6 +26,11 @@ Movie.init({
             len: [4],
         },
     },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        field: 'is_active'
+    }
 }, {
     sequelize,
     modelName: 'movies',

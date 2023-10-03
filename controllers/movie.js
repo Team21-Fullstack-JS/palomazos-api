@@ -6,6 +6,8 @@ const {
     getByTitle,
     getByDirector,
     getByYear,
+    update,
+    deletelogicById,
 } = require('../service/movie');
 
 exports.getAllMovies = async function (req, res) {
@@ -163,5 +165,58 @@ exports.create = async function (req, res) {
     })
 }
 
+exports.update = async function (req, res) {
+    const { id } = req.params;
+    const content = req.body;
 
+    const isUpdated = await update(id, { ...content });
+
+    if( isUpdated[0] < 1 ) {
+        return res
+            .status(400)
+            .json({
+                error: true,
+                code: 400,
+                message: 'No se pudo actualizar la película.',
+                data: null
+            });
+    }
+
+    const moviedb = await getById(id);
+
+    return res
+        .status(200)
+        .json({
+            error: false,
+            code: 200,
+            message: 'Película exitosamente.',
+            data: moviedb
+        });
+};
+
+exports.deletelogicById = async function (req, res) {
+	const { id } = req.params;
+
+    const isDeleted = await deletelogicById(id);
+
+    if( isDeleted[0] < 1 ) {
+        return res
+            .status(400)
+            .json({
+                error: true,
+                code: 400,
+                message: 'No se pudo eliminar la película.',
+                data: null
+            });
+    }
+
+    return res
+        .status(200)
+        .json({
+            error: false,
+            code: 200,
+            message: 'Película eliminada exitosamente.',
+            data: null
+        });
+};
 
