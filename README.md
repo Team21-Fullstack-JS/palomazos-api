@@ -45,13 +45,12 @@ git clone https://github.com/Team21-Fullstack-JS/palomazos-api.git
 ### Endpoints: ⏯
 En construccion...
 
-## Demo 👨‍💻
-                                                  
-- **Demo del backend**: Coming soon...
+## Demo del Backend 👨‍💻
+- [palomazos-api](https://palomazos-api-a0bcbaa57f47.herokuapp.com/) &nbsp; _En construccion..._
 
 ## Frontend 🖥️
 
-- **Application Demo**: Pronto con React...
+- **Application Demo**: &nbsp; _Pronto con React..._
 
 ## Autores ✒️
 

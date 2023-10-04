@@ -1,7 +1,12 @@
 require('dotenv').config();
 const express = require('express');
-const app = express();
+
 const { initDatabase } = require('./database/db');
+
+//Registro de passport
+require('./middlewares/passport');
+
+const app = express();
 
 //Inicializar la base de datos
 initDatabase();
