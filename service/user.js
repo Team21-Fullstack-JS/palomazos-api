@@ -1,22 +1,34 @@
 const { User } = require('../model/User');
+const {where} = require("sequelize");
 
 exports.signup = function (user) {
     return User.create(user);
 }
 
 exports.getAll = async function () {
-    const users = await User.findAll();
-    return users.map( (user) => user.dataValues.isActive && user.publicData())
+    const users = await User.findAll(
+        {
+            where: { isActive: true }
+        }
+    );
+
+    return users.map( (user) => user.publicData());
 }
 
 exports.getById = function (id) {
-    return User.findByPk(id);
+    return User.findOne({
+        where: {
+            id: id,
+            isActive: true
+        }
+    });
 }
 
 exports.getByEmail = function (email) {
     return User.findOne({
         where: {
-            email: email
+            email: email,
+            isActive: true
         }
     });
 };
@@ -24,7 +36,8 @@ exports.getByEmail = function (email) {
 exports.update = function (id, user) {
     return User.update(user, {
         where: {
-            id: id
+            id: id,
+            isActive: true
         }
     });
 };

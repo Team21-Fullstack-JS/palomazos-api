@@ -17,8 +17,6 @@ const validator = require('../middlewares/validator.js');
 const {
     createUserSchema,
     updateUserSchema,
-    //idUserSchema,
-    //emailUserSchema,
     loginUserSchema
 } = require('../validations/user.js');
 
@@ -27,7 +25,8 @@ const {
     userAlreadyExistsException,
     usersNotFoundException,
     userNotFoundException,
-    emailUserNotFoundException
+    emailUserNotFoundException,
+    userDeletedLogicException
 } = require('../middlewares/exceptions/user-exceptions.js');
 
 // Manejo de errores por token o nivel de acceso
@@ -53,6 +52,7 @@ router.post(
 router.post(
     '/login',
     validator.body(loginUserSchema),
+    userDeletedLogicException,
     login
 );
 
@@ -65,7 +65,6 @@ router.get('/all',
 );
 
 router.get('/findbyemail',
-    //validator.query(emailUserSchema),
     tokenErrorException,
     required,
     emailUserNotFoundException,
@@ -73,7 +72,6 @@ router.get('/findbyemail',
 );
 
 router.get('/',
-    //validator.params(idUserSchema),
     tokenErrorException,
     required,
     userNotFoundException,
@@ -82,7 +80,6 @@ router.get('/',
 
 router.put(
     '/',
-    //validator.params(idUserSchema),
     validator.body(updateUserSchema),
     tokenErrorException,
     required,
@@ -92,7 +89,6 @@ router.put(
 
 router.delete(
     '/',
-    //validator.params(idUserSchema),
     tokenErrorException,
     required,
     userNotFoundException,
