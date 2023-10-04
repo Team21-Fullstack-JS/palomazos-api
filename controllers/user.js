@@ -104,18 +104,7 @@ exports.update = async function (req, res) {
     const { id } = req.user;
     const content = req.body;
 
-    const isUpdated = await update(id, { ...content });
-
-    if( isUpdated[0] < 1 ) {
-        return res
-            .status(400)
-            .json({
-                error: true,
-                code: 400,
-                message: 'No se pudo actualizar el usuario.',
-                data: null
-            });
-    }
+    await update(id, { ...content });
 
     const userBd = await getById(id);
 

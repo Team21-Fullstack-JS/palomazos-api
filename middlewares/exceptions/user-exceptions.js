@@ -21,7 +21,7 @@ exports.userAlreadyExistsException = async function (req, res, next) {
 exports.usersNotFoundException = async function (req, res, next) {
     const users = await getAll();
 
-    if (!users[0] || users.length <= 0) {
+    if (users.length <= 0 || !users[0]) {
         return res
             .status(404)
             .json({
@@ -62,6 +62,23 @@ exports.emailUserNotFoundException = async function (req, res, next) {
                 error: true,
                 code: 404,
                 message: 'No se encontro un usuario con ese email.',
+                data: null
+            });
+    }
+
+    next();
+}
+
+exports.userDeletedLogicException = async function (req, res, next) {
+    const user = await getByEmail(req.body.email);
+
+    if (!user || !user.isActive) {
+        return res
+            .status(400)
+            .json({
+                error: true,
+                code: 400,
+                message: 'Usuario no existe o dado de baja.',
                 data: null
             });
     }

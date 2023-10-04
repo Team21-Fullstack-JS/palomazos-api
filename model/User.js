@@ -64,6 +64,7 @@ class User extends Model {
             lastName: this.lastName,
             email: this.email,
             role: this.role,
+            //isActive: this.isActive
         };
     }
 }
