@@ -5,7 +5,6 @@ const {
     getAllMovies,
     getById,
     getByTitle,
-    getByDirector,
     getByYear,
     update,
     deletelogicById,
@@ -15,7 +14,6 @@ const {
 router.get('/', getAllMovies);
 router.get('/:id', getById);
 router.get('/title/:title', getByTitle);
-router.get('/director/:director', getByDirector);
 router.get('/year/:year', getByYear);
 router.post('/', create);
 router.put('/:id', update);

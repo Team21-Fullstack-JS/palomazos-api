@@ -7,13 +7,15 @@ exports.tokenErrorException = async function (req, res, next) {
     const tokenDecoded = User.verifyJWT(token) //Verificamos el token
 
     if (tokenDecoded.error) {
-        const message = tokenDecoded.err.name === 'TokenExpiredError' ? 'Su Token ha expirado. Inicie sesion nuevamente.' : 'Token inválido o no activo';
+        const message = tokenDecoded.err.name ===
+        'TokenExpiredError' ? `Su Token ha expirado. Inicie sesion nuevamente. ${tokenDecoded.err.message}` :
+            'JsonWebTokenError' ? `Token invalido. ${tokenDecoded.err.message}` : 'Token aun no esta activo';
 
         return res
-            .status(400)
+            .status(401)
             .json({
                 error: true,
-                code: 400,
+                code: 401,
                 message,
                 data: null,
             })
