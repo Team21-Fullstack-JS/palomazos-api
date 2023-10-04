@@ -20,7 +20,6 @@ exports.userAlreadyExistsException = async function (req, res, next) {
 
 exports.usersNotFoundException = async function (req, res, next) {
     const users = await getAll();
-    console.log(users);
 
     if (!users[0] || users.length <= 0) {
         return res
@@ -37,7 +36,7 @@ exports.usersNotFoundException = async function (req, res, next) {
 }
 
 exports.userNotFoundException = async function (req, res, next) {
-    const user = await getById(req.params.id);
+    const user = await getById(req.user.id);
 
     if (!user) {
         return res
@@ -54,7 +53,7 @@ exports.userNotFoundException = async function (req, res, next) {
 }
 
 exports.emailUserNotFoundException = async function (req, res, next) {
-    const user = await getByEmail(req.query.email);
+    const user = await getByEmail(req.user.email);
 
     if (!user) {
         return res
