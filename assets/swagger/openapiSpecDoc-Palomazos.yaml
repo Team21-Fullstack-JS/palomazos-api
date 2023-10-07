@@ -1,0 +1,478 @@
+openapi: 3.0.1
+info:
+  title: Palomazos API
+  description: API de la aplicación Palomazos que se encarga de gestionar la información de la base de datos en MySQL. Esta aplicación permite a las personas darse de alta con su correo electrónico y una contraseña para comentar y calificar películas.
+  contact:
+    name: Equipo 21 Bedu
+    email: virtual.liga@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://palomazos-api-a0bcbaa57f47.herokuapp.com/api/v1
+    description: Servidor en Heroku (Prod)
+  - url: http://localhost:4005/api/v1
+    description: Servidor local (Dev)
+tags:
+- name: users
+  description: Endpoint que maneja toda la información referente a los usuarios.
+- name: movies
+  description: Endpoint que maneja toda la información referente a las peliculas.
+- name: reviews
+  description: Endpoint que maneja toda la información referente a las reviews de las peliculas.
+- name: comments
+  description: Endpoint que maneja toda la información referente a comentarios de las películas. Un comentario no puede existir sin un review.
+
+paths:
+  /users/signup:
+    post:
+      tags:
+      - users
+      summary: Registro de usuario nuevo
+      description: Permite a un usuario registrarse.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signupUser'
+        required: true
+      responses:
+          200:
+            description: Registro exitoso
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/signupExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+  /users/login:
+    post:
+      tags:
+      - users
+      summary: Inicio de sesión y autenticado de usuario
+      description: Permite a un usuario registrado iniciar sesión y obtener un token de seguridad.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+      responses:
+          200:
+            description: Login exitoso
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/loginExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+  /users/findbyemail:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+      - users
+      summary: Usuario autenticado obtiene sus datos mediante su email. Token requerido.
+      description: Retorna datos del usuario que coincida con el EMAIL del Token. JWT de seguridad requerido.
+      responses:
+        200:
+          description: Usuario obtenido exitosamente por su email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUserByEmail'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /users/all:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+      - users
+      summary: Retorna una lista con todos los usuarios
+      description: Retorna un arreglo con todos los usuarios del sistema. Sólo Administradores pueden realizar esta operacion, por lo que se requiere JWT de seguridad que autentique su rol como ADMIN.
+      responses:
+        200:
+          description: Lista de usuarios obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUsers'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+      - users
+      summary: Usuario autenticado obtiene sus datos. Token requerido.
+      description: Retorna datos del usuario que coincida con el ID del Token. JWT de seguridad requerido.
+      responses:
+        201:
+          description: Usuario obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUser'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+      - users
+      summary: Usuario autenticado puede actualizar sus datos.
+      description: Permite a un usuario logueado modificar total o parcialmente sus datos por lo que se requiere su token de autenticacion.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateUser'
+        required: true
+      responses:
+          200:
+            description: Usuario actualizado exitosamente
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/updateExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+      - users
+      summary: Usuario autenticado puede eliminar su cuenta.
+      description: Permite a un usuario logueado eliminar su cuenta de la aplicación. Este es una eliminacion logica, solo se marca una bandera como NO ACTIVO del usuario en la BD.
+      responses:
+          200:
+            description: Usuario eliminado exitosamente.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/deleteExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+
+#Para referenciar y no volver a escribirlos
+components:
+  responses:
+    Unauthorized:
+      description: (Unauthorized) No hay autorización para llamar el servicio
+    NotFound:
+      description: (NotFound) No se encontró información
+    BadRequest:
+      description: (BadRequest) Datos enviados incorrectos o hay datos obligatorios no enviados
+    ServerError:
+      description: (ServerError) Error en el servidor
+      
+  parameters:
+    token:
+        in: header
+        name: token
+        description: Token de autenticación.
+        required: true
+        schema: 
+          type: string
+    id:
+      name: id
+      in: path
+      required: true
+      description: Id del usuario
+      schema:
+        type: string
+  
+  schemas:
+    signupUser:
+      type: object
+      required:
+      - firstName
+      - lastName
+      - email
+      - password
+      - confirmpassword
+      properties:
+        firstName:
+          type: string
+          example: invitado
+        lastName:
+          type: string
+          example: guess
+        email:
+          type: string
+          example: guess@none.com
+        password:
+          type: string
+          example: unpasswordcualquiera
+        confirmPassword:
+          type: string
+          example: unpasswordcualquiera
+    signupExitoso:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 201
+        message:
+          type: string
+          example: Usuario creado exitosamente
+        data:
+          type: object
+          required:
+          - id
+          - firstName
+          - lastName
+          - email
+          - role
+          properties:
+            id:
+              type: number
+              example: 1
+            firstName:
+              type: string
+              example: invitado
+            lastName:
+              type: string
+              example: guess
+            email:
+              type: string
+              example: guess@none.com
+            role:
+              type: string
+              example: USER
+    loginUser:
+      type: object
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+          example: guess@none.com
+        password:
+          type: string
+          example: unpasswordcualquiera
+    loginExitoso:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Login exitoso!
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            email:
+              type: string
+              example: guess@none.com
+            role:
+              type: string
+              example: USER
+            token:
+              type: string
+              example: my_token_characters
+    getUser:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Usuario obtenido exitosamente
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            firstName:
+              type: string
+              example: invitado 
+            lastName:
+              type: string
+              example: guess
+            email:
+              type: string
+              example: guess@none.com
+            role:
+              type: string
+              example: USER
+    getUserByEmail:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Usuario obtenido exitosamente por su email
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            firstName:
+              type: string
+              example: invitado 
+            lastName:
+              type: string
+              example: guess
+            email:
+              type: string
+              example: guess@none.com
+            role:
+              type: string
+              example: USER
+    getUsers:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 
+        message:
+          type: string
+          example: Lista de usuarios obtenida exitosamente
+        usuarios:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              firstName:
+                type: string
+                example: invitado 
+              lastName:
+                type: string
+                example: guess
+              email:
+                type: string
+                example: guess@none.com
+              role:
+                type: string
+                example: USER
+    updateUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: invitado
+        lastName:
+          type: string
+          example: guess
+    updateExitoso:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Usuario actualizado exitosamente
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            firstName:
+              type: string
+              example: mi_nuevo_nombre
+            lastName:
+              type: string
+              example: mi_nuevo_apellido
+            email:
+              type: string
+              example: guess@none.com
+            role:
+              type: string
+              example: USER
+    deleteExitoso:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+           type: number
+           example: 200
+        message:
+          type: string
+          example: Usuario eliminado exitosamente
+        data: 
+          type: object
+          example: null
+              
+  securitySchemes:
+    bearerAuth:        
+      type: http
+      scheme: bearer
+      bearerFormat: JWT        
