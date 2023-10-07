@@ -82,54 +82,6 @@ exports.getByTitle = async function (req, res) {
         });
 }
 
-exports.getByTitle = async function (req, res) {
-    const movie = await getByTitle(req.params.title);
-
-    if (!movie) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'Película no encontrada.',
-                data: null
-            });
-    }
-
-    return res
-        .status(200)
-        .json({
-            error: false,
-            code: 200,
-            message: 'Película encontrada.',
-            data: movie
-        });
-}
-
-exports.getByDirector = async function (req, res) {
-    const movie = await getByDirector(req.params.director);
-
-    if (!movie) {
-        return res
-            .status(404)
-            .json({
-                error: true,
-                code: 404,
-                message: 'Película no encontrada.',
-                data: null
-            });
-    }
-
-    return res
-        .status(200)
-        .json({
-            error: false,
-            code: 200,
-            message: 'Película encontrada.',
-            data: movie
-        });
-}
-
 exports.getByYear = async function (req, res) {
     const movie = await getByYear(req.params.year);
 

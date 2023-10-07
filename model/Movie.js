@@ -7,17 +7,13 @@ exports.Movie = Movie;
 
 Movie.init({
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         primaryKey: true,
-        autoIncrement: true,
+        unique: true,
     },
     title: {
         type: DataTypes.STRING,
-        field: 'movie_title',
-    },
-    director: {
-        type:DataTypes.STRING,
-        field: 'director'
+        field: 'title',
     },
     year: {
         type: DataTypes.INTEGER,
@@ -26,6 +22,9 @@ Movie.init({
             len: [4],
         },
     },
+    overview: DataTypes.STRING,
+    poster_path: DataTypes.STRING,
+    backdrop_path: DataTypes.STRING,
     isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,

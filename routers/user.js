@@ -17,9 +17,7 @@ const validator = require('../middlewares/validator.js');
 const {
     createUserSchema,
     updateUserSchema,
-    idUserSchema,
-    emailUserSchema,
-    signinUserSchema
+    loginUserSchema
 } = require('../validations/user.js');
 
 // Importamos los diferentes manejadores de errores para los usuarios
@@ -27,38 +25,22 @@ const {
     userAlreadyExistsException,
     usersNotFoundException,
     userNotFoundException,
-    emailUserNotFoundException
+    emailUserNotFoundException,
+    userDeletedLogicException
 } = require('../middlewares/exceptions/user-exceptions.js');
+
+// Manejo de errores por token o nivel de acceso
+const {
+    tokenErrorException,
+    onlyAdminException
+} = require('../middlewares/exceptions/auth-exceptions.js');
+
+// Passport para la autenticación y autorización de usuarios
+const { required } = require('./auth')
 
 /** Path inicial http://my-app.com/users
  * Aqui definimos las rutas para el recurso /users
  */
-router.get(
-    '/',
-    usersNotFoundException,
-    getAll
-);
-
-router.get(
-    '/findby',
-    validator.query(emailUserSchema),
-    emailUserNotFoundException,
-    getByEmail
-);
-
-router.get(
-    '/:id',
-    validator.params(idUserSchema),
-    userNotFoundException,
-    getById
-);
-
-router.delete(
-    '/:id',
-    validator.params(idUserSchema),
-    userNotFoundException,
-    deleteLogicById
-);
 
 router.post(
     '/signup',
@@ -69,16 +51,48 @@ router.post(
 
 router.post(
     '/login',
-    validator.body(signinUserSchema),
+    validator.body(loginUserSchema),
+    userDeletedLogicException,
     login
 );
 
+router.get('/all',
+    tokenErrorException,
+    required,
+    onlyAdminException,
+    usersNotFoundException,
+    getAll,
+);
+
+router.get('/findbyemail',
+    tokenErrorException,
+    required,
+    emailUserNotFoundException,
+    getByEmail
+);
+
+router.get('/',
+    tokenErrorException,
+    required,
+    userNotFoundException,
+    getById,
+);
+
 router.put(
-    '/:id',
-    validator.params(idUserSchema),
+    '/',
     validator.body(updateUserSchema),
+    tokenErrorException,
+    required,
     userNotFoundException,
     update
+);
+
+router.delete(
+    '/',
+    tokenErrorException,
+    required,
+    userNotFoundException,
+    deleteLogicById
 );
 
 module.exports = router;

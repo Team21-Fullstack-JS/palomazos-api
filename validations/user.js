@@ -90,7 +90,7 @@ exports.createUserSchema = Joi.object(objectCreateUser).options({
     }
 });
 
-exports.signinUserSchema = Joi.object({
+exports.loginUserSchema = Joi.object({
     email:
         Joi.string()
             .empty()
@@ -131,16 +131,17 @@ exports.updateUserSchema = Joi.object(objectUpdateUser).min(1).options({
         }
     });
 
-exports.idUserSchema = Joi.object({
+/*exports.idUserSchema = Joi.object({
     id: Joi.number().messages({
         'number.base': 'El id debe ser un número',
     })
-});
+});*/
 
+/*
 exports.emailUserSchema = Joi.object({
     email: Joi.string().empty().required().messages({
         'string.base': 'El email debe ser una cadena de texto',
         'string.empty': 'El email no puede estar vacío',
         'any.required': 'El email es un campo requerido'
     }),
-});
+});*/

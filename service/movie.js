@@ -16,20 +16,12 @@ exports.getByTitle = function (title) {
     });
 };
 
-exports.getByDirector = function(director) {
-    return Movie.findOne({
-        where: {
-            director: director
-        }
-    });
-};
-
 exports.getByYear = function(year) {
-    return Movie.findOne({
+    return Movie.findAll({
         where: {
             year: year
         }
-    })
+    });
 
 };
 
