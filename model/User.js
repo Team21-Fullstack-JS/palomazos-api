@@ -92,9 +92,9 @@ User.init({
         unique: true,
         allowNull: false
     },
-    hash: {
-        type: DataTypes.STRING(1234),
-    },
+        hash: {
+            type: DataTypes.STRING(1234),
+        },
     salt: {
         type: DataTypes.STRING,
     },
