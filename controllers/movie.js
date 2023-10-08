@@ -4,7 +4,6 @@ const {
     getAllMovies,
     getById,
     getByTitle,
-    getByDirector,
     getByYear,
     update,
     deletelogicById,
