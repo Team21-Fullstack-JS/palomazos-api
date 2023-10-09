@@ -29,12 +29,12 @@ router.get(
 
 router.get(
     '/:id', 
-    validator.params(paramsSchema), 
+    validator.params(paramsSchema),
     getById
 );
 
 router.get(
-    '/title/:title', 
+    '/title/:title',
     getByTitle
 );
 
