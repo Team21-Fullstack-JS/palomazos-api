@@ -131,6 +131,41 @@ exports.updateUserSchema = Joi.object(objectUpdateUser).min(1).options({
         }
     });
 
+exports.changePasswordSchema = Joi.object({
+    password:
+        Joi.string()
+            .empty()
+            .required()
+            .min(8)
+            .max(30)
+            .messages({
+                'string.base': 'La contraseña debe ser una cadena de texto',
+                'string.empty': 'La contraseña no puede estar vacía',
+                'string.min': 'La longitud mínima de la contraseña es de {#limit} caracteres',
+                'string.max': 'La longitud máxima de la contraseña es de {#limit} caracteres',
+                'any.required': 'La contraseña es un campo requerido'
+            }),
+    newPassword:
+        Joi.string()
+            .empty()
+            .required()
+            .min(8)
+            .max(30)
+            .messages({
+                'string.base': 'La nueva contraseña debe ser una cadena de texto',
+                'string.empty': 'La nueva contraseña no puede estar vacía',
+                'string.min': 'La longitud mínima de la nueva contraseña es de {#limit} caracteres',
+                'string.max': 'La longitud máxima de la nueva contraseña es de {#limit} caracteres',
+                'any.required': 'La nueva contraseña es un campo requerido'
+            }),
+}).min(1).options({
+    messages: {
+        'object.unknown': 'El campo {#key} no se puede modificar',
+        'object.base': 'Los datos deben venir en un objeto JSON',
+        'object.min': 'El objeto JSON de entrada no puede estar vacío',
+    }
+});
+
 /*exports.idUserSchema = Joi.object({
     id: Joi.number().messages({
         'number.base': 'El id debe ser un número',

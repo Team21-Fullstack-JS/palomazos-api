@@ -8,6 +8,7 @@ const {
     getByEmail,
     update,
     deleteLogicById,
+    changePassword
 } = require('../controllers/user.js');
 
 // Middleware para validar los datos de entrada
@@ -17,7 +18,8 @@ const validator = require('../middlewares/validator.js');
 const {
     createUserSchema,
     updateUserSchema,
-    loginUserSchema
+    loginUserSchema,
+    changePasswordSchema
 } = require('../validations/user.js');
 
 // Importamos los diferentes manejadores de errores para los usuarios
@@ -93,6 +95,15 @@ router.delete(
     required,
     userNotFoundException,
     deleteLogicById
+);
+
+router.put(
+    '/change-password',
+    validator.body(changePasswordSchema),
+    tokenErrorException,
+    required,
+    userNotFoundException,
+    changePassword
 );
 
 module.exports = router;
