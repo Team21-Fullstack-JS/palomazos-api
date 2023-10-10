@@ -12,7 +12,6 @@ la API Rest de la aplicación.
     <li>Elegir una pelicula para realizar un review.</li>
     <li>Agregar comentarios a las peliculas.</li>
     <li>Puntuar peliculas.</li>
-    <li>Seguir a otros usuarios.</li>
 </ul>
 
 ## Desarrollado con 🔐
@@ -46,7 +45,7 @@ git clone https://github.com/Team21-Fullstack-JS/palomazos-api.git
 En construccion...
 
 ## Demo del Backend 👨‍💻
-- [palomazos-api](https://palomazos-api-a0bcbaa57f47.herokuapp.com/) &nbsp; _En construccion..._
+- [palomazos-api](https://palomazos-api-a0bcbaa57f47.herokuapp.com/api/v1/documentation/) &nbsp; Visita la documentación de la API Rest.
 
 ## Frontend 🖥️
 
@@ -58,5 +57,3 @@ En construccion...
 * **Marco Ibarra** - [mibarra24](https://github.com/mibarra24)
 * **Carlos Chirinos** - [carchirinos](https://github.com/carchirinos)
 * **Dario Carbajal** - [Madhra](https://github.com/Madhra)
-* **Bruno Valles** - [BrunoValles](https://github.com/BrunoValles)
-* **Obeth Farfan** - [ObethMaster](https://github.com/ObethMaster)

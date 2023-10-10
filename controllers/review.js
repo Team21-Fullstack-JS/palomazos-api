@@ -104,7 +104,7 @@ exports.create = async function (req, res) {
     return res.status(201).json({
         error: false,
         code: 201,
-        message: "Pelicula creada exitosamente",
+        message: "Review creado exitosamente",
         data: reviewDb
     })
 }
