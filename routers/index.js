@@ -24,5 +24,6 @@ const {
 router.use('/users', require('./user.js'));
 router.use('/movies', required, tokenErrorException, require('./movie.js'));
 router.use('/reviews', required, require('./review.js'));
+router.use('/comment', require('./comment.js'));
 
 module.exports = router;
