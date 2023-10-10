@@ -16,6 +16,27 @@ exports.updateMovieSchema = Joi.object({
     backdrop_path: Joi.string().required(),
 })
 
-exports.paramsSchema = Joi.object({
-	id: Joi.number().required(),
+exports.paramsIdSchema = Joi.object({
+	id: Joi.number().required().messages({
+        'number.base': 'El id debe ser un número',
+        'number.empty': 'El id no puede estar vacío',
+        'any.required': 'El id es un campo requerido'
+    })
+});
+
+exports.createMovieReviewSchema = Joi.object({
+    rate: Joi.number().min(1).max(5).required().messages({
+        'number.base': 'El rate debe ser un número',
+        'number.empty': 'El rate no puede estar vacío',
+        'number.min': 'El rate debe ser mayor o igual a {#limit}',
+        'number.max': 'El rate debe ser menor o igual a {#limit}',
+        'any.required': 'El rate es un campo requerido'
+    }),
+    comment: Joi.object({
+        content: Joi.string().min(5).optional().messages({
+            'string.base': 'El comentario debe ser una cadena de texto',
+            'string.empty': 'El comentario no puede estar vacío',
+            'string.min': 'El comentario debe tener una longitud mínima de {#limit} caracteres',
+        })
+    })
 });

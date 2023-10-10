@@ -31,14 +31,6 @@
     {
       "name": "movies",
       "description": "Endpoint que maneja toda la información referente a las peliculas."
-    },
-    {
-      "name": "reviews",
-      "description": "Endpoint que maneja toda la información referente a las reviews de las peliculas."
-    },
-    {
-      "name": "comments",
-      "description": "Endpoint que maneja toda la información referente a comentarios de las películas. Un comentario no puede existir sin un review."
     }
   ],
   "paths": {
@@ -305,6 +297,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/deleteExitoso"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/movies/{id}/review": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "movies"
+        ],
+        "summary": "Registra una Review de una pelicula. Token requerido",
+        "description": "Permite a un usuario autenticado realizar un Review a una pelicula elegida mediante su ID, calificarla y, opcionalmente, agregar un comentario.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID de la pelicula"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createMovieReview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Review creado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createMovieReviewExitoso"
                 }
               }
             }
@@ -695,6 +746,78 @@
           "data": {
             "type": "object",
             "example": null
+          }
+        }
+      },
+      "createMovieReview": {
+        "type": "object",
+        "required": [
+          "rate"
+        ],
+        "properties": {
+          "rate": {
+            "type": "number",
+            "example": 4
+          },
+          "comment": {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "string",
+                "example": "Una gran pelicula, emocionante de principio a fin."
+              }
+            }
+          }
+        }
+      },
+      "createMovieReviewExitoso": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": false
+          },
+          "code": {
+            "type": "number",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "Review creado exitosamente"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "rate": {
+                "type": "number",
+                "example": 4
+              },
+              "user_id": {
+                "type": "number",
+                "example": 1
+              },
+              "movie_id": {
+                "type": "number",
+                "example": 980489
+              },
+              "comment": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Una gran pelicula, emocionante de princio a fin"
+                  }
+                }
+              }
+            }
           }
         }
       }

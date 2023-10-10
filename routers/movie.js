@@ -8,6 +8,7 @@ const {
     getByYear,
     update,
     deletelogicById,
+    createMovieReview
 } = require('../controllers/movie.js');
 
 // Middleware para validar los datos de entrada
@@ -17,7 +18,8 @@ const validator = require('../middlewares/validator.js');
 const {
 	createMovieSchema,
 	updateMovieSchema,
-	paramsSchema,
+	paramsIdSchema,
+    createMovieReviewSchema
 } = require("../validations/movie.js");
 
 
@@ -29,7 +31,7 @@ router.get(
 
 router.get(
     '/:id', 
-    validator.params(paramsSchema),
+    validator.params(paramsIdSchema),
     getById
 );
 
@@ -51,15 +53,22 @@ router.post(
 
 router.put(
     '/:id',
-    validator.params(paramsSchema),
+    validator.params(paramsIdSchema),
 	validator.body(updateMovieSchema),
     update
 );
 
 router.delete(
     '/:id', 
-    validator.params(paramsSchema), 
+    validator.params(paramsIdSchema),
     deletelogicById
+);
+
+router.post(
+    '/:id/review',
+    validator.params(paramsIdSchema),
+    validator.body(createMovieReviewSchema),
+    createMovieReview
 );
 
 module.exports = router;

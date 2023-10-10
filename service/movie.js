@@ -11,7 +11,7 @@ exports.getById = function (id) {
 exports.getByTitle = function (title) {
     return Movie.findOne({
         where: {
-            title:title
+            title:title,
         }
     });
 };

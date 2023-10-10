@@ -17,7 +17,7 @@ Movie.hasMany(Review, {
     foreignKey: 'movie_id'
 });
 Review.belongsTo(Movie, {
-    foreignKey: 'user_id'
+    foreignKey: 'movie_id'
 });
 
 // Asociacion de la tabla 'reviews' con la tabla 'comments'
