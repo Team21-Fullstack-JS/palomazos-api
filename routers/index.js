@@ -23,5 +23,6 @@ const {
 // Path http://my-app.com/users
 router.use('/users', require('./user.js'));
 router.use('/movies', required, tokenErrorException, require('./movie.js'));
+router.use('/reviews', required, require('./review.js'));
 
 module.exports = router;

@@ -16,11 +16,8 @@ Movie.init({
         field: 'title',
     },
     year: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         field: 'release_year',
-        validate:{
-            len: [4],
-        },
     },
     overview: DataTypes.STRING,
     poster_path: DataTypes.STRING,
