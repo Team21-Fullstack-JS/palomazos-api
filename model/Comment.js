@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelize } = require('../database/Connection');
+const { DataTypes, Model } = require("sequelize");
+const { sequelize } = require("../database/Connection");
 
 class Comment extends Model {}
 
@@ -12,9 +12,14 @@ Comment.init({
         autoIncrement: true
     },
     content: {
-        type: DataTypes.STRING(500),
-        field: 'first_name',
+        type: DataTypes.STRING(255),
+        field: 'content',
         allowNull: false
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        field: 'is_active'
     },
 }, {
     sequelize,
