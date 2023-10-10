@@ -27,10 +27,12 @@ tags:
 paths:
   /users/signup:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - users
       summary: Registro de usuario nuevo
-      description: Permite a un usuario registrarse.
+      description: Permite a un usuario nuevo registrarse (sin token requerido). Los usuarios registrados con rol de administrador pueden registrar otros administradores, ocupan su token de seguridad.
       requestBody:
         content:
           application/json:
@@ -57,7 +59,7 @@ paths:
       tags:
       - users
       summary: Inicio de sesión y autenticado de usuario
-      description: Permite a un usuario registrado iniciar sesión y obtener un token de seguridad.
+      description: Permite a un usuario registrado iniciar sesión y obtener un token de seguridad. 
       requestBody:
         content:
           application/json:
@@ -198,6 +200,35 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
+  /users/change-password:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+      - users
+      summary: Usuario autenticado puede cambiar su password.
+      description: Permite a un usuario logueado cambiar su password. Es necesario enviar su password actual.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/changeUserPassword'
+        required: true
+      responses:
+          200:
+            description: Usuario actualizado exitosamente
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/changeUserPasswordExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'            
   /movies/{id}/review:
     post:
       security:
@@ -507,6 +538,34 @@ components:
         data: 
           type: object
           example: null
+    changeUserPassword:
+      type: object
+      required:
+      - password
+      - newPassword
+      properties:
+        password:
+          type: string
+          example: 54321abc
+        newPassword:
+          type: string
+          example: abc54321
+    changeUserPasswordExitoso:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Login exitoso!
+        data:
+          type: object
+          example: null
+          
     createMovieReview:
       type: object
       required:
