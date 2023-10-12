@@ -10,6 +10,7 @@ const {
     update,
     deleteLogicById
 } = require('../service/user');
+const {Review} = require("../model/Review");
 
 exports.signup = async function (req, res) {
 
@@ -98,15 +99,17 @@ exports.getByEmail = async function (req, res) {
 
 exports.getById = async function (req, res) {
     const { id } = req.user;
-    const user = await getById(id);
+    let isReviews = req.query.reviews;
+    isReviews = isReviews === 'true';
+    const data = await getById(id, isReviews);
 
     return res
         .status(200)
         .json({
             error: false,
             code: 200,
-            message: 'Usuario obtenido exitosamente.',
-            data: user.publicData()
+            message: 'Usuario y todos sus reviews obtenidos exitosamente.',
+            data: data
         });
 }
 

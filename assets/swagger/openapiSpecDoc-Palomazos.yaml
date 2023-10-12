@@ -133,8 +133,15 @@ paths:
         - bearerAuth: []
       tags: 
       - users
-      summary: Usuario autenticado obtiene sus datos. Token requerido.
-      description: Retorna datos del usuario que coincida con el ID del Token. JWT de seguridad requerido.
+      summary: Usuario autenticado obtiene sus datos, y opcionalmente, sus reviews. Token requerido.
+      description: Retorna datos del usuario que coincida con el ID del Token. Si se agrega el query param en true, se envian sus Reviews. JWT de seguridad requerido. 
+      parameters:
+        - in: query
+          name: reviews
+          schema:
+            type: boolean
+            example: false
+          description: Indica si se requieren todas sus reviews
       responses:
         201:
           description: Usuario obtenido exitosamente
@@ -221,6 +228,212 @@ paths:
               application/json:
                 schema:
                   $ref: '#/components/schemas/changeUserPasswordExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+  /movies/create:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - movies
+      summary: Crear pelicula nueva
+      description: Permite a un usuario crar una pelicula. 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createMovie'
+        required: true
+      responses:
+          200:
+            description: Registro exitoso
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/creacionExitosa'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+  /movies/all:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+        - movies
+      summary: Retorna una lista con todas las peliculas.
+      description: Retorna un arreglo con todas las peliculas del sistema.
+      responses:
+        200:
+          description: Lista de peliculas obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getMovies'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /movies/title/{title}:
+    get:
+     security:
+      - bearerAuth: []
+     tags:
+      - movies 
+     summary: Retorna una lista de todas las películas que coinciden con la búsqueda.
+     description: Retorna un arreglo con todas las películas del sistema que coincidan con el título buscado.
+     parameters:
+      - in: path
+        name: title
+        schema:
+          type: string
+        required: true
+        description: Titulo de la pelicula
+     responses:
+        200:
+          description: Resultados encontrados exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getMovieByTitle'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /movies/year/{year}:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - movies 
+      summary: Retorna una lista de todas las películas que coinciden con el año buscado.
+      description: Retorna un arreglo con todas las películas del sistema que coincidan con el año buscado.
+      parameters:
+        - in: path
+          name: year
+          schema:
+            type: integer
+          required: true
+          description: Año de la pelicula
+      responses:
+          200:
+            description: Resultados encontrados exitosamente.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/getMovieByTitle'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+  /movies/{id}:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - movies 
+      summary: Retorna la pelicula que coincide con el Id buscado.
+      description: Retorna un arreglo con todas las películas del sistema que coincidan con el id buscado.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: ID de la pelicula
+      responses:
+          200:
+            description: Resultados encontrados exitosamente.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/getMovieById'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+      - movies
+      summary: Usuario autenticado puede actualizar datos de una película.
+      description: Permite a un usuario logueado actualizar datos de una película.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID de la pelicula
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateMovie'
+        required: true
+      responses:
+          200:
+            description: Usuario actualizado exitosamente
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/changeUserPasswordExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+      - movies
+      summary: Usuario autenticado puede eliminar una película.
+      description: Permite a un usuario logueado eliminar una película de la aplicación. Este es una eliminacion logica, solo se marca una bandera como NO ACTIVO de la película en la BD.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID de la pelicula
+      responses:
+          200:
+            description: Película eliminada exitosamente.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/deleteMovieExitoso'
           400:
             $ref: '#/components/responses/BadRequest'
           401:
@@ -565,7 +778,180 @@ components:
         data:
           type: object
           example: null
-          
+    createMovie:
+      type: object
+      required:
+      - id
+      - title
+      - year
+      properties:
+        id:
+          type: number
+          example: 1
+        title:
+          type: string
+          example: oppenheimer
+        year:
+          type: number
+          example: 2023
+    creacionExitosa:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 201
+        message:
+          type: string
+          example: Usuario creado exitosamente
+        data:
+          type: object
+          required:
+          - id
+          - firstName
+          - lastName
+          - email
+          - role
+          properties:
+            id:
+             type: number
+             example: 1
+            title:
+             type: string
+             example: oppenheimer
+            year:
+             type: number
+             example: 2023
+    getMovies:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 
+        message:
+          type: string
+          example: Lista de peliculas obtenida exitosamente
+        movies:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                example: 1
+              Title:
+                type: string
+                example: oppenheimer
+              year:
+                type: number
+                example: 2023
+    getMovieByTitle:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Pelicula obtenida exitosamente.
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            Title:
+              type: string
+              example: oppenheimer
+            year:
+              type: number
+              example: 2023
+    getMovieByYear:
+      type: object
+      properties:
+        error:
+          type: number
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Pelicula obtenida exitosamente.
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            Title:
+              type: string
+              example: oppenheimer
+            year:
+              type: number
+              example: 2023
+    getMovieById:
+      type: object
+      properties:
+        error:
+          type: number
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Pelicula obtenida exitosamente.
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 1
+            Title:
+              type: string
+              example: oppenheimer
+            year:
+              type: number
+              example: 2023
+    updateMovie:
+      type: object
+      required:
+      - title
+      - year
+      properties:
+        title:
+          type: string
+          example: oppenheimer
+        newTitle:
+          type: string
+          example: barbie
+        year:
+          type: number
+          example: 2023
+        newYear:
+          type: number
+          example: 2024
+    deleteMovieExitoso:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+           type: number
+           example: 200
+        message:
+          type: string
+          example: Pelicula eliminadaexitosamente
+        data: 
+          type: object
+          example: null
     createMovieReview:
       type: object
       required:

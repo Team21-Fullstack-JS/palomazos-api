@@ -14,7 +14,7 @@ const {
 } = require('../service/review');
 
 const {
-    create: createComment,
+    newComment: createComment,
 } = require('../service/comment');
 
 exports.getAllMovies = async function (req, res) {
@@ -213,7 +213,7 @@ exports.createMovieReview = async function (req, res) {
     let commentDb = null;
     if (comment) {
         commentDb = await createComment({
-            id_review: data.id,
+            review_id: data.id,
             content: comment.content,
         });
     }
