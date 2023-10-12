@@ -133,8 +133,15 @@ paths:
         - bearerAuth: []
       tags: 
       - users
-      summary: Usuario autenticado obtiene sus datos. Token requerido.
-      description: Retorna datos del usuario que coincida con el ID del Token. JWT de seguridad requerido.
+      summary: Usuario autenticado obtiene sus datos, y opcionalmente, sus reviews. Token requerido.
+      description: Retorna datos del usuario que coincida con el ID del Token. Si se agrega el query param en true, se envian sus Reviews. JWT de seguridad requerido. 
+      parameters:
+        - in: query
+          name: reviews
+          schema:
+            type: boolean
+            example: false
+          description: Indica si se requieren todas sus reviews
       responses:
         201:
           description: Usuario obtenido exitosamente
@@ -263,7 +270,7 @@ paths:
       security:
         - bearerAuth: []
       tags: 
-      - users
+        - movies
       summary: Retorna una lista con todas las peliculas.
       description: Retorna un arreglo con todas las peliculas del sistema.
       responses:
@@ -271,8 +278,8 @@ paths:
           description: Lista de peliculas obtenida exitosamente.
           content:
             application/json:
-            schema:
-              $ref: '#/components/schemas/getMovies'
+              schema:
+                $ref: '#/components/schemas/getMovies'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -284,19 +291,25 @@ paths:
   /movies/title/{title}:
     get:
      security:
-        - bearerAuth: []
+      - bearerAuth: []
      tags:
       - movies 
      summary: Retorna una lista de todas las películas que coinciden con la búsqueda.
      description: Retorna un arreglo con todas las películas del sistema que coincidan con el título buscado.
+     parameters:
+      - in: path
+        name: title
+        schema:
+          type: string
+        required: true
+        description: Titulo de la pelicula
      responses:
         200:
           description: Resultados encontrados exitosamente.
           content:
             application/json:
               schema:
-              $ref: '#/components/schemas/getMovieByTitle'
-          required: true
+                $ref: '#/components/schemas/getMovieByTitle'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -307,57 +320,78 @@ paths:
           $ref: '#/components/responses/ServerError'
   /movies/year/{year}:
     get:
-    security:
-        - bearerAuth: []
-    tags:
+      security:
+      - bearerAuth: []
+      tags:
       - movies 
-    summary: Retorna una lista de todas las películas que coinciden con el año buscado.
-    description: Retorna un arreglo con todas las películas del sistema que coincidan con el año buscado.
-    responses:
-        200:
-          description: Resultados encontrados exitosamente.
-          content:
-            application/json:
-              schema:
-              $ref: '#/components/schemas/getByYear'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/ServerError'
+      summary: Retorna una lista de todas las películas que coinciden con el año buscado.
+      description: Retorna un arreglo con todas las películas del sistema que coincidan con el año buscado.
+      parameters:
+        - in: path
+          name: year
+          schema:
+            type: integer
+          required: true
+          description: Año de la pelicula
+      responses:
+          200:
+            description: Resultados encontrados exitosamente.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/getMovieByTitle'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
   /movies/{id}:
     get:
-    security:
-        - bearerAuth: []
-    tags:
+      security:
+      - bearerAuth: []
+      tags:
       - movies 
-    summary: Retorna la pelicula que coincide con el Id buscado.
-    description: Retorna un arreglo con todas las películas del sistema que coincidan con el id buscado.
-    responses:
-        200:
-          description: Resultados encontrados exitosamente.
-          content:
-            application/json:
-              schema:
-              $ref: '#/components/schemas/getMovieById'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/ServerError'
+      summary: Retorna la pelicula que coincide con el Id buscado.
+      description: Retorna un arreglo con todas las películas del sistema que coincidan con el id buscado.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: ID de la pelicula
+      responses:
+          200:
+            description: Resultados encontrados exitosamente.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/getMovieById'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
     put:
-    security:
+      security:
         - bearerAuth: []
       tags:
       - movies
       summary: Usuario autenticado puede actualizar datos de una película.
       description: Permite a un usuario logueado actualizar datos de una película.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID de la pelicula
       requestBody:
         content:
           application/json:
@@ -380,12 +414,19 @@ paths:
           500:
             $ref: '#/components/responses/ServerError'
     delete:
-    security:
+      security:
         - bearerAuth: []
       tags:
-      - users
+      - movies
       summary: Usuario autenticado puede eliminar una película.
       description: Permite a un usuario logueado eliminar una película de la aplicación. Este es una eliminacion logica, solo se marca una bandera como NO ACTIVO de la película en la BD.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID de la pelicula
       responses:
           200:
             description: Película eliminada exitosamente.

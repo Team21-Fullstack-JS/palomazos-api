@@ -23,34 +23,47 @@ El stack utilizado para desarrollar esta API Rest es el siguiente:
 * MySQL 5+
 * Sequelize 6
 
-## Getting Started 🚀
+## Arrancando 🚀
 
-Clone the repo:
-```bash
-git clone https://github.com/Team21-Fullstack-JS/palomazos-api.git
-```
+* Clonar el repo:
+  ```bash
+  git clone https://github.com/Team21-Fullstack-JS/palomazos-api.git
+  ```
 
-### Pre-requisites 📋
+### Pre-requisitos 📋
 
 * Asegurate de estar en la carpeta `/palomazos-api`
   ```bash
     cd palomazos-api
     ```
-* Ejecutar el comando `npm install` para instalar todas las dependencias del proyecto.
+* Ejecutar el siguiente comando para instalar todas las dependencias del proyecto.
   ```bash
     npm install
   ```
+* Si deseas probar en modo de desarrollo ejecuta:
+  ```bash
+    npm run dev
+  ```
+  No olvides configurar las variables de entorno en tu archivo `.env`, guiate con el archivo `.env.example`
 
-### Endpoints: ⏯
-En construccion...
+* O puedes ir a la siguiente sección `Demo del backend` para ejecutarlo en modo de producción.
 
 ## Demo del Backend 👨‍💻
 - [palomazos-api](https://palomazos-api-a0bcbaa57f47.herokuapp.com/api/v1/documentation/) &nbsp; Visita la documentación de la API Rest.
 
+## Proceso: ⏯
+1. [x] Debes darte de alta en `POST /users/signup`.
+2. [x] Inicia sesión en `POST /users/login` y copiar el token de autenticacion que se te devolvera en la respuesta.
+3. [x] A partir de aqui es necesario agregar el token de autenticacion en el header de la peticion.
+4. [x] Realizar una review: calificar una pelicula y comentarla `POST /movies/{id}/review`.
+5. [x] Obtener todas tus reviews que has hecho `GET /users?reviews=true`.
+
+## Diagrama de clases 📑
+![ClassDiagram](\assets\diagrams\UML-diagram-class.png)
+
 ## Frontend 🖥️
-
 - **Application Demo**: &nbsp; _Pronto con React..._
-
+- 
 ## Autores ✒️
 
 * **Hiram Chávez** - [JustLearningMX](https://github.com/JustLearningMX)
