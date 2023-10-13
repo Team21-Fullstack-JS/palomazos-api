@@ -65,7 +65,7 @@ router.delete(
 );
 
 router.post(
-    '/:id/review',
+    '/:id/reviews',
     validator.params(paramsIdSchema),
     validator.body(createMovieReviewSchema),
     createMovieReview

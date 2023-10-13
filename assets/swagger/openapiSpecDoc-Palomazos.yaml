@@ -25,13 +25,13 @@ tags:
 #   description: Endpoint que maneja toda la información referente a comentarios de las películas. Un comentario no puede existir sin un review.
 
 paths:
-  /users/signup:
+  /users:
     post:
       security:
         - bearerAuth: []
       tags:
       - users
-      summary: Registro de usuario nuevo
+      summary: Registro de usuario nuevo. Token requerido para ADMINS.
       description: Permite a un usuario nuevo registrarse (sin token requerido). Los usuarios registrados con rol de administrador pueden registrar otros administradores, ocupan su token de seguridad.
       requestBody:
         content:
@@ -53,81 +53,7 @@ paths:
           404:
             $ref: '#/components/responses/NotFound'
           500:
-            $ref: '#/components/responses/ServerError'
-  /users/login:
-    post:
-      tags:
-      - users
-      summary: Inicio de sesión y autenticado de usuario
-      description: Permite a un usuario registrado iniciar sesión y obtener un token de seguridad. 
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/loginUser'
-        required: true
-      responses:
-          200:
-            description: Login exitoso
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/loginExitoso'
-          400:
-            $ref: '#/components/responses/BadRequest'
-          401:
-            $ref: '#/components/responses/Unauthorized'
-          404:
-            $ref: '#/components/responses/NotFound'
-          500:
-            $ref: '#/components/responses/ServerError'
-  /users/findbyemail:
-    get:
-      security:
-        - bearerAuth: []
-      tags: 
-      - users
-      summary: Usuario autenticado obtiene sus datos mediante su email. Token requerido.
-      description: Retorna datos del usuario que coincida con el EMAIL del Token. JWT de seguridad requerido.
-      responses:
-        200:
-          description: Usuario obtenido exitosamente por su email
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getUserByEmail'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/ServerError'
-  /users/all:
-    get:
-      security:
-        - bearerAuth: []
-      tags: 
-      - users
-      summary: Retorna una lista con todos los usuarios
-      description: Retorna un arreglo con todos los usuarios del sistema. Sólo Administradores pueden realizar esta operacion, por lo que se requiere JWT de seguridad que autentique su rol como ADMIN.
-      responses:
-        200:
-          description: Lista de usuarios obtenida exitosamente.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getUsers'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/ServerError'
-  /users:
+            $ref: '#/components/responses/ServerError'  
     get:
       security:
         - bearerAuth: []
@@ -207,7 +133,34 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
-  /users/change-password:
+  /users/auth/token:
+    post:
+      tags:
+      - users
+      summary: Inicio de sesión y autenticado de usuario
+      description: Permite a un usuario registrado iniciar sesión y obtener un token de seguridad. 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+      responses:
+          200:
+            description: Login exitoso
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/loginExitoso'
+          400:
+            $ref: '#/components/responses/BadRequest'
+          401:
+            $ref: '#/components/responses/Unauthorized'
+          404:
+            $ref: '#/components/responses/NotFound'
+          500:
+            $ref: '#/components/responses/ServerError'
+  /users/auth/password/new:
     put:
       security:
         - bearerAuth: []
@@ -236,6 +189,52 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
+  /users/data/single/email:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+      - users
+      summary: Usuario autenticado obtiene sus datos mediante su email registrado. Token requerido.
+      description: Retorna datos del usuario que coincida con el EMAIL del Token. JWT de seguridad requerido.
+      responses:
+        200:
+          description: Usuario obtenido exitosamente por su email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUserByEmail'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /users/data/all:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+      - users
+      summary: Retorna una lista con todos los usuarios
+      description: Retorna un arreglo con todos los usuarios del sistema. Sólo Administradores pueden realizar esta operacion, por lo que se requiere JWT de seguridad que autentique su rol como ADMIN.
+      responses:
+        200:
+          description: Lista de usuarios obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUsers'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
   /movies/create:
     post:
       security:
@@ -449,7 +448,7 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'            
-  /movies/{id}/review:
+  /movies/{id}/reviews:
     post:
       security:
         - bearerAuth: []

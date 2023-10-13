@@ -45,20 +45,20 @@ const { required } = require('./auth')
  */
 
 router.post(
-    '/signup',
+    '/',
     validator.body(createUserSchema),
     userAlreadyExistsException,
     signup
 );
 
 router.post(
-    '/login',
+    '/auth/token',
     validator.body(loginUserSchema),
     userDeletedLogicException,
     login
 );
 
-router.get('/all',
+router.get('/data/all',
     tokenErrorException,
     required,
     onlyAdminException,
@@ -66,7 +66,7 @@ router.get('/all',
     getAll,
 );
 
-router.get('/findbyemail',
+router.get('/data/single/email',
     tokenErrorException,
     required,
     emailUserNotFoundException,
@@ -98,7 +98,7 @@ router.delete(
 );
 
 router.put(
-    '/change-password',
+    '/auth/password/new',
     validator.body(changePasswordSchema),
     tokenErrorException,
     required,
