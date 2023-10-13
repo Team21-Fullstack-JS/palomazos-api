@@ -1,7 +1,37 @@
 const { Movie } = require('../model/Movie');
 
-exports.getAllMovies = function () {
-    return Movie.findAll();
+const {
+    convertReviewsIntoInstances,
+    getCommentFromReview,
+    getUserFromReview
+} = require("./utils");
+
+exports.getAllMovies = async function (isReviews) {
+
+    //Obtenermos el listado de las movies que tiene reviews
+    const movies = await Movie.findAll();
+
+    //Si no se requieren las reviews, retornamos las movies con sus datos
+    if (!isReviews) return movies;
+
+    //Si se requieren las reviews, retornamos las movies con sus reviews, comments y users
+    return await Promise.all(movies.map( async ( movie) => {
+
+        //Obtenemos las reviews del usuario y despues las convertimos en instancias de Review
+        const reviews = await movie.getReviews()
+            .then( reviews => convertReviewsIntoInstances(reviews));
+
+        //Obtenemos el comment y el user de cada review
+        const reviewsWithCommentsAndUsers = await Promise.all(reviews.map( async (review) => {
+
+            const comment = await getCommentFromReview(review);
+            const user = await getUserFromReview(review);
+
+            return { ...review.dataValues, comment, user: user.publicData() };
+        }))
+
+        return { ...movie.dataValues, reviews: reviewsWithCommentsAndUsers}
+    }));
 }
 
 exports.getById = function (id) {

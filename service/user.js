@@ -3,6 +3,11 @@ const { where} = require("sequelize");
 const {Review} = require("../model/Review");
 const {Comment} = require("../model/Comment");
 const {Movie} = require("../model/Movie");
+const {
+    convertReviewsIntoInstances,
+    getCommentFromReview,
+    getMovieFromReview
+} = require("./utils");
 
 exports.signup = function (user) {
     return User.create(user);
@@ -28,19 +33,17 @@ exports.getById = async function (id, isReviews) {
 
     if (!isReviews) return user.publicData();
 
-    const reviews = await user.getReviews();
+    //Obtenemos las reviews del usuario y despues las convertimos en instancias de Review
+    const reviews = await user.getReviews()
+        .then( reviews => convertReviewsIntoInstances(reviews));
 
-    const res = reviews
-        .map( review => Review.build(review.dataValues));
+    //Obtenemos el comment y movie de cada review
+    const reviewsWithCommentsAndMovies = await Promise.all(reviews.map( async (review) => {
 
-    const reviewsWithComments = await Promise.all(res.map( async (review) => {
-        const comment = await review.getComment();
-        return { ...review.dataValues, comment: comment.dataValues };
-    }));
+        const comment = await getCommentFromReview(review);
+        const movie = await getMovieFromReview(review);
 
-    const reviewsWithCommentsAndMovies = await Promise.all(reviewsWithComments.map( async (review) => {
-        const movie = await Movie.findByPk(review.movie_id);
-        return { ...review, movie: movie.dataValues };
+        return { ...review.dataValues, comment, movie };
     }));
 
     return {...user.publicData(), reviews: reviewsWithCommentsAndMovies};

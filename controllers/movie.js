@@ -18,7 +18,10 @@ const {
 } = require('../service/comment');
 
 exports.getAllMovies = async function (req, res) {
-    const movies = await getAllMovies();
+    let isReviews = req.query.reviews;
+    isReviews = isReviews === 'true';
+
+    const movies = await getAllMovies(isReviews);
 
     if (movies.length <= 0) {
         return res

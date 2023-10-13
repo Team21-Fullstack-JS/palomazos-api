@@ -265,14 +265,21 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
-  /movies/all:
+  /movies:
     get:
       security:
         - bearerAuth: []
       tags: 
         - movies
       summary: Retorna una lista con todas las peliculas.
-      description: Retorna un arreglo con todas las peliculas del sistema.
+      description: Retorna un arreglo con todas las peliculas del sistema. Si se agrega el query param en true, se envian sus Reviews. JWT de seguridad requerido. 
+      parameters:
+        - in: query
+          name: reviews
+          schema:
+            type: boolean
+            example: false
+          description: Indica si se requieren todas sus reviews
       responses:
         200:
           description: Lista de peliculas obtenida exitosamente.
