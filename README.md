@@ -52,12 +52,65 @@ El stack utilizado para desarrollar esta API Rest es el siguiente:
 - [palomazos-api](https://palomazos-api-a0bcbaa57f47.herokuapp.com/api/v1/documentation/) &nbsp; Visita la documentación de la API Rest.
 
 ## Proceso: ⏯
-1. [x] Debes darte de alta en `POST /users`.
+1. [x] Debes darte de alta en `POST /users`, enviando por el `body`.
+    ```json
+    {
+        "firstName": "first_name_example",
+        "lastName": "last_name_example",
+        "email": "email_example@gmail.com",
+        "password": "MyPassword123",
+        "confirmPassword": "MyPassword123"
+    }
+   ```
 2. [x] Inicia sesión en `POST /users/auth/token` y copiar el token de autenticacion que se te devolvera en la respuesta.
+    ```json
+    {
+        "email": "email_example@gmail.com",
+        "password": "MyPassword123"
+    }
+   ```
 3. [x] A partir de aqui es necesario agregar el token de autenticacion en el header de la peticion.
-4. [x] Realizar una review: calificar una pelicula y comentarla `POST /movies/{id}/reviews`.
+4. [x] Obten todas las peliculas en `GET /movies` y copia el `id` de una de ellas.
+    ```json
+    {
+      "id": 762430, //Copiar este id
+      "Title": "Contrarreloj",
+      "overview": "Un ejecutivo de un banco recibe, mientras conduce a sus hijos a la escuela...",
+      "release_year": "2023-08-23"
+    }
+   ```
+4. [x] Realizar una review: califica la pelicula y comentala `POST /movies/{id}/reviews`.
+    ```jsonpath
+     POST /movies/762430/reviews
+    ```
+    ```json
+    {
+        "rate": 5,
+        "comment": {
+          "content": "Excelente pelicula, la tension se siente en todo momento y no deja lugar a las distracciones."
+        }
+    }
+    ```
 5. [x] Obtener tus datos, y opcionalmente, todas las reviews que has hecho `GET /users?reviews=true`.
+   * Traer todas tus reviews
+     ```jsonpath
+       GET /users?reviews=true
+     ```
+
+   * Solo tu informacion
+     ```jsonpath
+      GET /users
+     ```
 6. [x] Obtener todas las peliculas con su informacion, y opcionalmente con sus Reviews `GET /movies?reviews=true`.
+   * Traer todas las reviews de la pelicula
+      ```jsonpath
+        GET /users?reviews=true
+      ```
+
+   * Solo la informacion de la pelicula
+     ```jsonpath
+      GET /users
+     ```
 
 ## Diagrama de clases 📑
 ![ClassDiagram](\assets\diagrams\UML-diagram-class.png)
