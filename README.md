@@ -56,7 +56,8 @@ El stack utilizado para desarrollar esta API Rest es el siguiente:
 2. [x] Inicia sesión en `POST /users/login` y copiar el token de autenticacion que se te devolvera en la respuesta.
 3. [x] A partir de aqui es necesario agregar el token de autenticacion en el header de la peticion.
 4. [x] Realizar una review: calificar una pelicula y comentarla `POST /movies/{id}/review`.
-5. [x] Obtener todas tus reviews que has hecho `GET /users?reviews=true`.
+5. [x] Obtener tus datos, y opcionalmente, todas las reviews que has hecho `GET /users?reviews=true`.
+6. [x] Obtener todas las peliculas con su informacion, y opcionalmente con sus Reviews `GET /movies?reviews=true`.
 
 ## Diagrama de clases 📑
 ![ClassDiagram](\assets\diagrams\UML-diagram-class.png)
