@@ -1,4 +1,4 @@
-const { getByEmail, getAll, getById} = require("../../service/user");
+const { getByEmail, getAll, getUserBy} = require("../../service/user");
 
 exports.userAlreadyExistsException = async function (req, res, next) {
     const { email } = req.body;
@@ -36,7 +36,11 @@ exports.usersNotFoundException = async function (req, res, next) {
 }
 
 exports.userNotFoundException = async function (req, res, next) {
-    const user = await getById(req.user.id);
+    let isEmail = req.query.email;
+    isEmail = isEmail === 'true';
+    const searchBy = isEmail ? req.user.email : req.user.id;
+
+    const user = await getUserBy(isEmail, searchBy);
 
     if (!user) {
         return res

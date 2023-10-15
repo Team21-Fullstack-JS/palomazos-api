@@ -59,22 +59,15 @@ paths:
         - bearerAuth: []
       tags: 
       - users
-      summary: Usuario autenticado obtiene sus datos, y opcionalmente, sus reviews. Token requerido.
-      description: Retorna datos del usuario que coincida con el ID del Token. Si se agrega el query param en true, se envian sus Reviews. JWT de seguridad requerido. 
-      parameters:
-        - in: query
-          name: reviews
-          schema:
-            type: boolean
-            example: false
-          description: Indica si se requieren todas sus reviews
+      summary: Retorna una lista con todos los usuarios
+      description: Retorna un arreglo con todos los usuarios del sistema. Sólo Administradores pueden realizar esta operacion, por lo que se requiere JWT de seguridad que autentique su rol como ADMIN.
       responses:
-        201:
-          description: Usuario obtenido exitosamente
+        200:
+          description: Lista de usuarios obtenida exitosamente.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getUser'
+                $ref: '#/components/schemas/getUsers'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -82,7 +75,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFound'
         500:
-          $ref: '#/components/responses/ServerError'
+          $ref: '#/components/responses/ServerError'            
     put:
       security:
         - bearerAuth: []
@@ -133,7 +126,72 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
-  /users/auth/token:
+  /users/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags: 
+      - users
+      summary: Usuario autenticado obtiene sus datos, y opcionalmente, sus reviews. Token requerido.
+      description: Retorna los datos del usuario, la busqueda es por `id`, pero si se envia el param `byEmail=true` la busqueda se hara por email. Ademas, si se agrega el query param `reviews=true` se envian tambien sus _Reviews_. JWT de seguridad requerido. 
+      parameters:
+        - in: query
+          name: reviews
+          schema:
+            type: boolean
+            example: false
+          description: Indica si se requieren todas sus reviews
+        - in: query
+          name: byemail
+          schema:
+            type: boolean
+            example: false
+          description: Buscar al usuario por su email
+      responses:
+        201:
+          description: Usuario obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getUser'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'    
+    # get:
+    #   security:
+    #     - bearerAuth: []
+    #   tags: 
+    #   - users
+    #   summary: Usuario autenticado obtiene sus datos mediante su email registrado. Token requerido.
+    #   description: Retorna datos del usuario que coincida con el EMAIL del Token. JWT de seguridad requerido. Si se agrega el query param 'byemail' en true, se envian sus Reviews. JWT de seguridad requerido. 
+    #   parameters:
+    #     - in: query
+    #       name: byemail
+    #       schema:
+    #         type: boolean
+    #         example: false
+    #       description: Indica si se requieren todas sus reviews
+    #   responses:
+    #     200:
+    #       description: Usuario obtenido exitosamente por su email
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/getUserByEmail'
+    #     400:
+    #       $ref: '#/components/responses/BadRequest'
+    #     401:
+    #       $ref: '#/components/responses/Unauthorized'
+    #     404:
+    #       $ref: '#/components/responses/NotFound'
+    #     500:
+    #       $ref: '#/components/responses/ServerError'          
+  /users/auth:
     post:
       tags:
       - users
@@ -160,7 +218,6 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
-  /users/auth/password/new:
     put:
       security:
         - bearerAuth: []
@@ -189,52 +246,6 @@ paths:
             $ref: '#/components/responses/NotFound'
           500:
             $ref: '#/components/responses/ServerError'
-  /users/data/single/email:
-    get:
-      security:
-        - bearerAuth: []
-      tags: 
-      - users
-      summary: Usuario autenticado obtiene sus datos mediante su email registrado. Token requerido.
-      description: Retorna datos del usuario que coincida con el EMAIL del Token. JWT de seguridad requerido.
-      responses:
-        200:
-          description: Usuario obtenido exitosamente por su email
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getUserByEmail'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/ServerError'
-  /users/data/all:
-    get:
-      security:
-        - bearerAuth: []
-      tags: 
-      - users
-      summary: Retorna una lista con todos los usuarios
-      description: Retorna un arreglo con todos los usuarios del sistema. Sólo Administradores pueden realizar esta operacion, por lo que se requiere JWT de seguridad que autentique su rol como ADMIN.
-      responses:
-        200:
-          description: Lista de usuarios obtenida exitosamente.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/getUsers'
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        404:
-          $ref: '#/components/responses/NotFound'
-        500:
-          $ref: '#/components/responses/ServerError'
   /movies/create:
     post:
       security:
@@ -271,7 +282,7 @@ paths:
       tags: 
         - movies
       summary: Retorna una lista con todas las peliculas.
-      description: Retorna un arreglo con todas las peliculas del sistema. Si se agrega el query param en true, se envian sus Reviews. JWT de seguridad requerido. 
+      description: Retorna un arreglo con todas las peliculas del sistema. Si se agrega el _query param_ `reviews=true`, se envian sus Reviews. JWT de seguridad requerido. 
       parameters:
         - in: query
           name: reviews

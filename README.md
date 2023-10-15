@@ -62,7 +62,7 @@ El stack utilizado para desarrollar esta API Rest es el siguiente:
         "confirmPassword": "MyPassword123"
     }
    ```
-2. [x] Inicia sesión en `POST /users/auth/token` y copiar el token de autenticacion que se te devolvera en la respuesta.
+2. [x] Inicia sesión en `POST /users/auth` y copiar el token de autenticacion que se te devolvera en la respuesta.
     ```json
     {
         "email": "email_example@gmail.com",
