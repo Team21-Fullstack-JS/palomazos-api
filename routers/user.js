@@ -4,11 +4,10 @@ const {
     signup,
     login,
     getAll,
-    getById,
-    getByEmail,
+    getUserBy,
     update,
     deleteLogicById,
-    changePassword
+    changePassword,
 } = require('../controllers/user.js');
 
 // Middleware para validar los datos de entrada
@@ -27,7 +26,6 @@ const {
     userAlreadyExistsException,
     usersNotFoundException,
     userNotFoundException,
-    emailUserNotFoundException,
     userDeletedLogicException
 } = require('../middlewares/exceptions/user-exceptions.js');
 
@@ -44,21 +42,14 @@ const { required } = require('./auth')
  * Aqui definimos las rutas para el recurso /users
  */
 
-router.post(
+router.post( //Registro de usuario nuevo
     '/',
     validator.body(createUserSchema),
     userAlreadyExistsException,
     signup
 );
 
-router.post(
-    '/auth/token',
-    validator.body(loginUserSchema),
-    userDeletedLogicException,
-    login
-);
-
-router.get('/data/all',
+router.get('/', //Retorna una lista con todos los usuarios --Solo Admins
     tokenErrorException,
     required,
     onlyAdminException,
@@ -66,21 +57,7 @@ router.get('/data/all',
     getAll,
 );
 
-router.get('/data/single/email',
-    tokenErrorException,
-    required,
-    emailUserNotFoundException,
-    getByEmail
-);
-
-router.get('/',
-    tokenErrorException,
-    required,
-    userNotFoundException,
-    getById,
-);
-
-router.put(
+router.put( //Usuario autenticado puede actualizar sus datos
     '/',
     validator.body(updateUserSchema),
     tokenErrorException,
@@ -89,7 +66,7 @@ router.put(
     update
 );
 
-router.delete(
+router.delete( //Usuario autenticado puede eliminar su cuenta --Logicamente
     '/',
     tokenErrorException,
     required,
@@ -97,8 +74,22 @@ router.delete(
     deleteLogicById
 );
 
+router.get('/me', //Usuario autenticado puede ver sus datos
+    tokenErrorException,
+    required,
+    userNotFoundException,
+    getUserBy,
+);
+
+router.post(
+    '/auth',
+    validator.body(loginUserSchema),
+    userDeletedLogicException,
+    login
+);
+
 router.put(
-    '/auth/password/new',
+    '/auth',
     validator.body(changePasswordSchema),
     tokenErrorException,
     required,

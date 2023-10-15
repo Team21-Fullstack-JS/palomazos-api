@@ -1,16 +1,15 @@
-const { User } = require('../model/User');
 const passport = require('passport');
+
+const { User } = require('../model/User');
 
 // Los servicios que estan encargados de interactuar con la base de datos
 const {
     signup,
     getAll,
-    getById,
-    getByEmail,
+    getUserBy,
     update,
     deleteLogicById
 } = require('../service/user');
-const {Review} = require("../model/Review");
 
 exports.signup = async function (req, res) {
 
@@ -83,25 +82,16 @@ exports.getAll = async function (req, res) {
         });
 }
 
-exports.getByEmail = async function (req, res) {
-    const { email } = req.user;
-    const user = await getByEmail(email);
+exports.getUserBy = async function (req, res) {
+    let isEmail = req.query.email;
+    isEmail = isEmail === 'true';
 
-    return res
-        .status(200)
-        .json({
-            error: false,
-            code: 200,
-            message: 'Usuario obtenido exitosamente por su email.',
-            data: user.publicData()
-        });
-}
+    const searchBy = isEmail ? req.user.email : req.user.id;
 
-exports.getById = async function (req, res) {
-    const { id } = req.user;
     let isReviews = req.query.reviews;
     isReviews = isReviews === 'true';
-    const data = await getById(id, isReviews);
+
+    const user = await getUserBy(isEmail, searchBy, isReviews);
 
     return res
         .status(200)
@@ -109,17 +99,18 @@ exports.getById = async function (req, res) {
             error: false,
             code: 200,
             message: 'Usuario y todos sus reviews obtenidos exitosamente.',
-            data: data
+            data: isReviews ? user : user.publicData()
         });
 }
 
 exports.update = async function (req, res) {
+    console.log('ENTRO A UPDATE USER');
     const { id } = req.user;
     const content = req.body;
 
     await update(id, { ...content });
 
-    const userBd = await getById(id);
+    const userBd = await getUserBy(false, id);
 
     return res
         .status(200)
@@ -161,7 +152,7 @@ exports.changePassword = async function (req, res) {
     const { id } = req.user;
     const { password, newPassword } = req.body;
 
-    const user = await getById(id);
+    const user = await getUserBy(false, id);
 
     const isPasswordValid = user.validatePassword(password);
 

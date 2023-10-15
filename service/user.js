@@ -1,8 +1,6 @@
 const { User } = require('../model/User');
 const { where} = require("sequelize");
-const {Review} = require("../model/Review");
-const {Comment} = require("../model/Comment");
-const {Movie} = require("../model/Movie");
+
 const {
     convertReviewsIntoInstances,
     getCommentFromReview,
@@ -23,15 +21,23 @@ exports.getAll = async function () {
     return users.map( (user) => user.publicData());
 }
 
-exports.getById = async function (id, isReviews) {
-    const user = await User.findOne({
-        where: {
-            id: id,
+exports.getUserBy = async function (isEmail, searchBy, isReviews) {
+
+    const searchById = {
+            id: searchBy,
             isActive: true
-        }
+    };
+
+    const searchByEmail = {
+            email: searchBy,
+            isActive: true
+    };
+
+    const user = await User.findOne({
+        where: isEmail ? {...searchByEmail} : {...searchById}
     });
 
-    if (!isReviews) return user.publicData();
+    if (!isReviews) return user;
 
     //Obtenemos las reviews del usuario y despues las convertimos en instancias de Review
     const reviews = await user.getReviews()
