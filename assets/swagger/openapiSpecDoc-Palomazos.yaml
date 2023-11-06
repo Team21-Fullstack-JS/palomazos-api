@@ -466,7 +466,7 @@ paths:
       tags:
       - movies
       summary: Registra una Review de una pelicula. Token requerido
-      description: Permite a un usuario autenticado realizar un Review a una pelicula elegida mediante su ID, calificarla y, opcionalmente, agregar un comentario.
+      description: Permite a un usuario autenticado realizar un Review a una pelicula elegida mediante su ID, calificarla del 1 al 5, agregar palomita o tacha y, opcionalmente, agregar un comentario.
       parameters:
         - in: path
           name: id
@@ -977,6 +977,9 @@ components:
         rate:
           type: number
           example: 4
+        isCheck:
+          type: boolean
+          example: true
         comment:
           type: object
           properties:
@@ -1004,6 +1007,9 @@ components:
             rate:
               type: number
               example: 4
+            isCheck:
+              type: boolean
+              example: true
             user_id:
               type: number
               example: 1
