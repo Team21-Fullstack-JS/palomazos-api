@@ -187,11 +187,12 @@ exports.createMovieReview = async function (req, res) {
     //Obtenemos los datos del usuario y la película
     const { id: user_id } = req.user;
     const { id: movie_id } = req.params;
-    const { rate, comment } = req.body;
+    const { rate, comment, isCheck } = req.body;
 
     //Primero creamos la review
     const review = await createReview({
         rate,
+        isCheck,
         user_id,
         movie_id,
     });

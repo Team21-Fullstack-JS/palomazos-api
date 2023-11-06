@@ -1,9 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const { sequelize } = require("../database/Connection");
 
-const Review = sequelize.define(
-    "reviews",
-  {
+const Review = sequelize.define("reviews",{
     id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
@@ -18,6 +16,11 @@ const Review = sequelize.define(
         max: 10,
       }
     },
+    isCheck: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      field: 'is_check'
+    }
   },
   {
     sequelize,
