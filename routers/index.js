@@ -22,7 +22,7 @@ const {
 
 // Path http://my-app.com/users
 router.use('/users', require('./user.js'));
-router.use('/movies', required, tokenErrorException, require('./movie.js'));
+router.use('/movies', require('./movie.js'));
 router.use('/reviews', required, tokenErrorException, require('./review.js'));
 router.use('/comment', required, tokenErrorException, require('./comment.js'));
 

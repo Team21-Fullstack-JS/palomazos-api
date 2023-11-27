@@ -104,7 +104,6 @@ exports.getUserBy = async function (req, res) {
 }
 
 exports.update = async function (req, res) {
-    console.log('ENTRO A UPDATE USER');
     const { id } = req.user;
     const content = req.body;
 
