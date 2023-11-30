@@ -31,6 +31,11 @@ exports.createMovieReviewSchema = Joi.object({
         'number.min': 'El rate debe ser mayor o igual a {#limit}',
         'number.max': 'El rate debe ser menor o igual a {#limit}',
         'any.required': 'El rate es un campo requerido'
+    })
+    ,isCheck: Joi.boolean().required().messages({
+        'boolean.base': 'El isCheck debe ser un booleano',
+        'boolean.empty': 'El isCheck no puede estar vacío',
+        'any.required': 'El isCheck es un campo requerido'
     }),
     comment: Joi.object({
         content: Joi.string().min(5).optional().messages({
