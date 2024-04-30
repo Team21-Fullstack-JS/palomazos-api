@@ -116,7 +116,7 @@ El stack utilizado para desarrollar esta API Rest es el siguiente:
 ![ClassDiagram](\assets\diagrams\UML-diagram-class.png)
 
 ## Frontend 🖥️
-- **Application Demo**: &nbsp; _Pronto con React..._
+- [palomazos](https://team21-fullstack-js.github.io/palomazos/) &nbsp; Demostracion del frontend.
 - 
 ## Autores ✒️
 
