@@ -21,8 +21,8 @@ app.use(express.json());//Parsea el body
 app.use(express.urlencoded({ extended: false})); //Parsea URL codificados del body
 app.use(cors()); //Seguridad en peticiones
 
-app.use('/api/v1/', require('./routers/index.js'));
-app.use('/api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));//Endpoint para la documentación
+app.use('/palomazos-api/v1/', require('./routers/index.js'));
+app.use('/palomazos-api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));//Endpoint para la documentación
 
 //Importamos middlewares para manejar de errores
 const { handleErrorJoi } = require('./middlewares/validation-error.js'); //Errores de validación por Joi
