@@ -32,7 +32,7 @@ const { unknownError } = require('./middlewares/unknown-error.js'); //Errores in
 app.use( handleErrorJoi );
 app.use( unknownError );
 
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
