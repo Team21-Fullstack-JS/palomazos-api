@@ -12,18 +12,26 @@ const { initDatabase } = require('./database/db');
 require('./middlewares/passport');
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
 
 //Inicializar la base de datos
 initDatabase();
 
+// 🔧 CORS solo en desarrollo (porque en producción lo maneja Nginx)
+if (!isProduction) {
+    console.log('🧪 Modo desarrollo: habilitando CORS desde Express');
+    app.use(cors({
+        origin: ['http://localhost:5173', 'https://team21-fullstack-js.github.io', 'https://hiram-oci-mty.duckdns.org'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+} else {
+    console.log('🚀 Modo producción: CORS manejado por Nginx');
+}
+
 //Middlewares
 app.use(express.json());//Parsea el body
 app.use(express.urlencoded({ extended: false})); //Parsea URL codificados del body
-app.use(cors({
-    origin: ['http://localhost:5173', 'https://hiram-oci-mty.duckdns.org'], // dominios que permites
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
 
 app.use('/palomazos-api/v1/', require('./routers/index.js'));
 app.use('/palomazos-api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));//Endpoint para la documentación
