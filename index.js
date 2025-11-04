@@ -19,7 +19,11 @@ initDatabase();
 //Middlewares
 app.use(express.json());//Parsea el body
 app.use(express.urlencoded({ extended: false})); //Parsea URL codificados del body
-app.use(cors()); //Seguridad en peticiones
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://hiram-oci-mty.duckdns.org'], // dominios que permites
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/palomazos-api/v1/', require('./routers/index.js'));
 app.use('/palomazos-api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));//Endpoint para la documentación
